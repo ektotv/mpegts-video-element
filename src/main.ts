@@ -17,7 +17,27 @@ class MpegtsVideoElement extends CustomVideoElement {
     super.src = src;
   }
 
-  load(): void {
+  attributeChangedCallback(
+    attrName: string,
+    oldValue?: string | null,
+    newValue?: string | null
+  ): void {
+    super.attributeChangedCallback(attrName, oldValue, newValue);
+
+    if (attrName === "src") {
+      if (oldValue !== null && oldValue !== newValue) {
+        this.switchSource();
+      }
+    }
+  }
+
+  switchSource() {
+    this.destroy();
+    this.load();
+    this.nativeEl.play();
+  }
+
+  destroy() {
     if (this.#player) {
       this.#player.pause();
       this.#player.unload();
@@ -25,7 +45,11 @@ class MpegtsVideoElement extends CustomVideoElement {
       this.#player.destroy();
       this.#player = null;
     }
+  }
 
+  #firstLoad = true;
+
+  load(): void {
     if (mpegts.getFeatureList().mseLivePlayback) {
       this.#player = mpegts.createPlayer(
         {
@@ -43,15 +67,20 @@ class MpegtsVideoElement extends CustomVideoElement {
       this.#player.attachMediaElement(this.nativeEl);
       this.#player.load();
 
-      if (this.hasAttribute("muted")) {
-        this.nativeEl.muted = true;
-      }
-      if (this.hasAttribute("autoplay")) {
-        this.nativeEl.play();
+      if (this.#firstLoad) {
+        if (this.hasAttribute("muted")) {
+          this.nativeEl.muted = true;
+        }
+        if (this.hasAttribute("autoplay")) {
+          this.nativeEl.play();
+        }
+        this.#firstLoad = false;
       }
 
       this.#player.on(mpegts.Events.ERROR, (event) => {
         console.error(event);
+        this.destroy();
+        this.load();
       });
     }
   }
