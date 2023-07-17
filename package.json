@@ -1,0 +1,45 @@
+{
+  "name": "mpegts-video-element",
+  "description": "MPEG2-TS Video Web Component",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "MIT",
+  "author": {
+    "name": "ekto",
+    "url": "https://ekto.tv/"
+  },
+  "main": "./dist/mpegts-video-element.umd.cjs",
+  "module": "./dist/mpegts-video-element.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/mpegts-video-element.js",
+      "require": "./dist/mpegts-video-element.umd.cjs"
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "tag": "latest"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "5.1.6",
+    "vite": "4.4.4",
+    "vite-plugin-dts": "3.2.0",
+    "vitest": "0.33.0"
+  },
+  "dependencies": {
+    "custom-media-element": "^0.2.0",
+    "mpegts.js": "^1.7.3"
+  },
+  "volta": {
+    "node": "16.20.1"
+  }
+}

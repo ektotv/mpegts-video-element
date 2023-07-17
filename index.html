@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MPEG2-TS Video Element</title>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/media-chrome@1/+esm"></script>
+  <script type="module" src="/src/main.ts"></script>
+  <style>
+    media-live-button {
+      display: none;
+    }
+
+    media-controller[mediastreamtype=live] media-time-range {
+      display: none;
+    }
+
+    media-controller[mediastreamtype=live] media-live-button {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app"></div>
+  <h1>Native</h1>
+  <mpegts-video slot="media" muted autoplay controls
+    src="http://81.94.196.204/tsstreamer/France24_HD.ts"></mpegts-video>
+  <!--
+  <h1>Media Chrome With Native Controls</h1>
+
+  <media-controller style='aspect-ratio: 16/9; width: 100%;'>
+    <mpegts-video slot="media" muted autoplay controls
+      src="http://81.94.196.204/tsstreamer/France24_HD.ts"></mpegts-video>
+
+    <media-loading-indicator slot="centered-chrome" noautohide></media-loading-indicator>
+    <media-control-bar>
+      <media-play-button></media-play-button>
+      <media-mute-button></media-mute-button>
+      <media-volume-range></media-volume-range>
+      <media-time-range></media-time-range>
+      <media-pip-button></media-pip-button>
+      <media-captions-button></media-captions-button>
+      <media-live-button disabled>
+        <div slot="indicator"></div>
+      </media-live-button>
+
+      <media-fullscreen-button></media-fullscreen-button>
+    </media-control-bar>
+  </media-controller>
+-->
+  <h1>Media Chrome Without Native Controls</h1>
+
+  <media-controller style='aspect-ratio: 16/9; width: 100%;'>
+    <mpegts-video slot="media" muted autoplay src="http://81.94.196.204/tsstreamer/France24_HD.ts"></mpegts-video>
+
+    <media-loading-indicator slot="centered-chrome" noautohide></media-loading-indicator>
+    <media-control-bar>
+      <media-play-button></media-play-button>
+      <media-mute-button></media-mute-button>
+      <media-volume-range></media-volume-range>
+      <media-time-range></media-time-range>
+      <media-pip-button></media-pip-button>
+      <media-captions-button></media-captions-button>
+      <media-live-button disabled>
+        <div slot="indicator"></div>
+      </media-live-button>
+
+      <media-fullscreen-button></media-fullscreen-button>
+    </media-control-bar>
+  </media-controller>
+
+</body>
+
+</html>
