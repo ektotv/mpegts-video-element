@@ -9,8 +9,27 @@
   <script type="module" src="https://cdn.jsdelivr.net/npm/media-chrome@1/+esm"></script>
   <script type="module" src="/src/main.ts"></script>
   <style>
+    html,
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      width: 100%;
+      height: 100%;
+    }
+
     media-live-button {
       display: none;
+    }
+
+    media-controller {
+      aspect-ratio: 16/9;
+      width: 80%;
+      margin: auto;
+      border-radius: 10px;
+      overflow: hidden;
+
     }
 
     media-controller[mediastreamtype=live] media-time-range {
@@ -20,54 +39,35 @@
     media-controller[mediastreamtype=live] media-live-button {
       display: block;
     }
+
+    .spacer {
+      background: var(--media-control-background, var(--media-secondary-color, rgb(20 20 30 / .7)));
+      flex-grow: 1;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+    }
   </style>
 </head>
 
 <body>
-  <div id="app"></div>
-  <h1>Native</h1>
-  <mpegts-video slot="media" muted autoplay controls
-    src="http://81.94.196.204/tsstreamer/France24_HD.ts"></mpegts-video>
-  <!--
-  <h1>Media Chrome With Native Controls</h1>
 
-  <media-controller style='aspect-ratio: 16/9; width: 100%;'>
-    <mpegts-video slot="media" muted autoplay controls
-      src="http://81.94.196.204/tsstreamer/France24_HD.ts"></mpegts-video>
-
-    <media-loading-indicator slot="centered-chrome" noautohide></media-loading-indicator>
-    <media-control-bar>
-      <media-play-button></media-play-button>
-      <media-mute-button></media-mute-button>
-      <media-volume-range></media-volume-range>
-      <media-time-range></media-time-range>
-      <media-pip-button></media-pip-button>
-      <media-captions-button></media-captions-button>
-      <media-live-button disabled>
-        <div slot="indicator"></div>
-      </media-live-button>
-
-      <media-fullscreen-button></media-fullscreen-button>
-    </media-control-bar>
-  </media-controller>
--->
-  <h1>Media Chrome Without Native Controls</h1>
-
-  <media-controller style='aspect-ratio: 16/9; width: 100%;'>
+  <media-controller noautoseektolive defaultstreamtype="live">
     <mpegts-video slot="media" muted autoplay src="http://81.94.196.204/tsstreamer/France24_HD.ts"></mpegts-video>
 
     <media-loading-indicator slot="centered-chrome" noautohide></media-loading-indicator>
+
+
     <media-control-bar>
       <media-play-button></media-play-button>
       <media-mute-button></media-mute-button>
       <media-volume-range></media-volume-range>
       <media-time-range></media-time-range>
+      <span class="spacer"></span>
       <media-pip-button></media-pip-button>
       <media-captions-button></media-captions-button>
-      <media-live-button disabled>
-        <div slot="indicator"></div>
-      </media-live-button>
-
+      <media-live-button disabled></media-live-button>
       <media-fullscreen-button></media-fullscreen-button>
     </media-control-bar>
   </media-controller>

@@ -16,6 +16,36 @@ for mpegts.js with an API that aims to match the
 <mpegts-video muted autoplay controls src="http://192.168.1.110/streaming/camera.ts"></mpegts-video>
 ```
 
+With Media Chrome
+
+```html
+<media-controller noautoseektolive defaultstreamtype="live">
+  <mpegts-video
+    slot="media"
+    muted
+    autoplay
+    src="http://192.168.1.110/streaming/camera.ts"
+  ></mpegts-video>
+
+  <media-loading-indicator
+    slot="centered-chrome"
+    noautohide
+  ></media-loading-indicator>
+
+  <media-control-bar>
+    <media-play-button></media-play-button>
+    <media-mute-button></media-mute-button>
+    <media-volume-range></media-volume-range>
+    <media-time-range></media-time-range>
+    <span class="spacer"></span>
+    <media-pip-button></media-pip-button>
+    <media-captions-button></media-captions-button>
+    <media-live-button disabled></media-live-button>
+    <media-fullscreen-button></media-fullscreen-button>
+  </media-control-bar>
+</media-controller>
+```
+
 ## Install
 
 First install the NPM package:

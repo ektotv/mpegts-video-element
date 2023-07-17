@@ -43,12 +43,17 @@ class MpegtsVideoElement extends CustomVideoElement {
       this.#player.attachMediaElement(this.nativeEl);
       this.#player.load();
 
+      if (this.hasAttribute("muted")) {
+        this.nativeEl.muted = true;
+      }
+      if (this.hasAttribute("autoplay")) {
+        this.nativeEl.play();
+      }
+
       this.#player.on(mpegts.Events.ERROR, (event) => {
         console.error(event);
       });
     }
-
-    return super.load();
   }
 
   connectedCallback(): void {
