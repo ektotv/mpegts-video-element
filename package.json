@@ -1,9 +1,13 @@
 {
   "name": "mpegts-video-element",
   "description": "MPEG2-TS Video Web Component",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ektotv/mpegts-video-element.git"
+  },
   "author": {
     "name": "ekto",
     "url": "https://ekto.tv/"
@@ -27,7 +31,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "release": "pnpm build && pnpm publish --access public"
   },
   "devDependencies": {
     "typescript": "5.1.6",
@@ -41,5 +46,13 @@
   },
   "volta": {
     "node": "16.20.1"
-  }
+  },
+  "keywords": [
+    "mpegts",
+    "mpeg2-ts",
+    "video-element",
+    "web-component",
+    "video",
+    "mpegts.js"
+  ]
 }

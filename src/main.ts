@@ -3,53 +3,23 @@ import mpegts from "mpegts.js";
 
 class MpegtsVideoElement extends CustomVideoElement {
   #player: mpegts.Player | null = null;
+  #firstLoad: boolean = true;
 
   constructor() {
     super();
   }
 
-  // Override the src getter & setter.
   get src() {
     return super.src;
   }
 
   set src(src) {
     super.src = src;
-  }
-
-  attributeChangedCallback(
-    attrName: string,
-    oldValue?: string | null,
-    newValue?: string | null
-  ): void {
-    super.attributeChangedCallback(attrName, oldValue, newValue);
-
-    if (attrName === "src") {
-      if (oldValue !== null && oldValue !== newValue) {
-        this.switchSource();
-      }
-    }
-  }
-
-  switchSource() {
-    this.destroy();
     this.load();
-    this.nativeEl.play();
   }
-
-  destroy() {
-    if (this.#player) {
-      this.#player.pause();
-      this.#player.unload();
-      this.#player.detachMediaElement();
-      this.#player.destroy();
-      this.#player = null;
-    }
-  }
-
-  #firstLoad = true;
 
   load(): void {
+    this.#destroy();
     if (mpegts.getFeatureList().mseLivePlayback) {
       this.#player = mpegts.createPlayer(
         {
@@ -60,7 +30,6 @@ class MpegtsVideoElement extends CustomVideoElement {
         {
           lazyLoadMaxDuration: 3 * 60,
           enableWorker: true,
-          seekType: "param",
           reuseRedirectedURL: true,
         }
       );
@@ -71,22 +40,36 @@ class MpegtsVideoElement extends CustomVideoElement {
         if (this.hasAttribute("muted")) {
           this.nativeEl.muted = true;
         }
-        if (this.hasAttribute("autoplay")) {
-          this.nativeEl.play();
-        }
         this.#firstLoad = false;
+      }
+
+      if (this.hasAttribute("autoplay")) {
+        this.nativeEl.play();
       }
 
       this.#player.on(mpegts.Events.ERROR, (event) => {
         console.error(event);
-        this.destroy();
         this.load();
       });
     }
   }
 
+  #destroy() {
+    if (this.#player) {
+      this.#player.pause();
+      this.#player.unload();
+      this.#player.detachMediaElement();
+      this.#player.destroy();
+      this.#player = null;
+    }
+  }
+
   connectedCallback(): void {
     this.load();
+  }
+
+  disconnectedCallback(): void {
+    this.#destroy();
   }
 }
 
