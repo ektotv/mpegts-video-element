@@ -13,7 +13,7 @@ for mpegts.js with an API that aims to match the
 
 <!-- prettier-ignore -->
 ```html
-<mpegts-video muted autoplay controls src="http://81.94.196.204/tsstreamer/France24_HD.ts"></mpegts-video>
+<mpegts-video muted autoplay controls src="http://192.168.1.110/streaming/camera.ts"></mpegts-video>
 ```
 
 ## Install
