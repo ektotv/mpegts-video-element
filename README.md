@@ -76,6 +76,45 @@ Optionally, you can load the script directly from a CDN using [esm.run](https://
 
 This will register the custom elements with the browser so they can be used as HTML.
 
+## Deferred mode
+
+By default, the element will load and setup the mpegts.js player immediately. This behaviour can be deferred so you can control when the player is loaded.
+
+This is useful when you want to pass a custom `mpegts.js` configuration to the player.
+
+```html
+<mpegts-video
+  muted
+  autoplay
+  controls
+  src="http://192.168.1.109/stream.ts"
+  defer
+></mpegts-video>
+
+<script>
+  customElements.whenDefined("mpegts-video").then(() => {
+    const video = document.querySelector("mpegts-video");
+
+    // set a custom mpegts config
+    video.mpegtsConfig = {
+      lazyLoadMaxDuration: 3 * 60,
+      enableWorker: true,
+      reuseRedirectedURL: true,
+    };
+
+    //set a custom mpegts logging config
+    video.mpegtsLoggingConfig = {
+      forceGlobalTag: true,
+      globalTag: "mpegts-video-element",
+      enableVerbose: true,
+    };
+
+    // then load the player
+    video.load();
+  });
+</script>
+```
+
 ## Related
 
 - [Media Chrome](https://github.com/muxinc/media-chrome) Your media player's dancing suit. 🕺
@@ -90,3 +129,7 @@ This will register the custom elements with the browser so they can be used as H
 - [`castable-video`](https://github.com/muxinc/castable-video) Cast your video element to the big screen with ease!
 - [`<mux-player>`](https://github.com/muxinc/elements/tree/main/packages/mux-player) The official Mux-flavored video player custom element.
 - [`<mux-video>`](https://github.com/muxinc/elements/tree/main/packages/mux-video) A Mux-flavored HTML5 video element w/ hls.js and Mux data builtin.
+
+```
+
+```

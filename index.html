@@ -49,7 +49,7 @@
 <body>
 
   <media-controller noautoseektolive defaultstreamtype="live">
-    <mpegts-video slot="media" muted autoplay src="http://81.94.196.204/tsstreamer/France24_HD.ts"></mpegts-video>
+    <mpegts-video slot="media" muted autoplay src="http://81.94.196.204/tsstreamer/France24_HD.ts" defer></mpegts-video>
 
     <media-loading-indicator slot="centered-chrome" noautohide></media-loading-indicator>
 
@@ -65,6 +65,29 @@
       <media-fullscreen-button></media-fullscreen-button>
     </media-control-bar>
   </media-controller>
+
+  <script>
+    customElements.whenDefined('mpegts-video').then(() => {
+      const video = document.querySelector("mpegts-video");
+
+      // set a custom mpegts config
+      video.mpegtsConfig = {
+        lazyLoadMaxDuration: 3 * 60,
+        enableWorker: true,
+        reuseRedirectedURL: true,
+      };
+
+      //set a custom mpegts logging config
+      video.mpegtsLoggingConfig = {
+        forceGlobalTag: true,
+        globalTag: "mpegts-video-element",
+        enableVerbose: true,
+      }
+
+      // then load the player
+      video.load();
+    });
+  </script>
 
 </body>
 

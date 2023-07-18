@@ -1,7 +1,7 @@
 {
   "name": "mpegts-video-element",
   "description": "MPEG2-TS Video Web Component",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "type": "module",
   "license": "MIT",
   "repository": {
