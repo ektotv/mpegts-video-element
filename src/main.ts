@@ -1,5 +1,5 @@
-import { CustomVideoElement } from "custom-media-element";
-import Mpegts from "mpegts.js";
+import { CustomVideoElement } from 'custom-media-element';
+import Mpegts from 'mpegts.js';
 
 class MpegtsVideoElement extends CustomVideoElement {
   constructor() {
@@ -28,7 +28,7 @@ class MpegtsVideoElement extends CustomVideoElement {
   mpegtsLoggingConfig: Partial<Mpegts.LoggingControlConfig> = {};
   #defaultMpegtsLoggingConfig: Mpegts.LoggingControlConfig = {
     forceGlobalTag: false,
-    globalTag: "mpegts-video-element",
+    globalTag: 'mpegts-video-element',
     enableAll: false,
     enableDebug: false,
     enableVerbose: false,
@@ -46,7 +46,7 @@ class MpegtsVideoElement extends CustomVideoElement {
           ...this.mpegtsLoggingConfig,
         });
 
-        if (this.hasAttribute("muted")) {
+        if (this.hasAttribute('muted')) {
           this.nativeEl.muted = true;
         }
         this.#firstLoad = false;
@@ -54,17 +54,17 @@ class MpegtsVideoElement extends CustomVideoElement {
 
       this.#player = Mpegts.createPlayer(
         {
-          type: "mse",
+          type: 'mse',
           isLive: true,
           url: this.src,
         },
-        { ...this.#defaultMpegtsConfig, ...this.mpegtsConfig }
+        { ...this.#defaultMpegtsConfig, ...this.mpegtsConfig },
       );
 
       this.#player.attachMediaElement(this.nativeEl);
       this.#player.load();
 
-      if (this.hasAttribute("autoplay")) {
+      if (this.hasAttribute('autoplay')) {
         this.nativeEl.play();
       }
 
@@ -86,7 +86,7 @@ class MpegtsVideoElement extends CustomVideoElement {
   }
 
   connectedCallback(): void {
-    if (!this.hasAttribute("defer")) {
+    if (!this.hasAttribute('defer')) {
       this.load();
     }
   }
@@ -96,11 +96,8 @@ class MpegtsVideoElement extends CustomVideoElement {
   }
 }
 
-if (
-  globalThis.customElements &&
-  !globalThis.customElements.get("mpegts-video")
-) {
-  globalThis.customElements.define("mpegts-video", MpegtsVideoElement);
+if (globalThis.customElements && !globalThis.customElements.get('mpegts-video')) {
+  globalThis.customElements.define('mpegts-video', MpegtsVideoElement);
 }
 
 export default MpegtsVideoElement;

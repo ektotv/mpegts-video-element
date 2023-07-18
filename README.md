@@ -20,17 +20,9 @@ With Media Chrome
 
 ```html
 <media-controller noautoseektolive defaultstreamtype="live">
-  <mpegts-video
-    slot="media"
-    muted
-    autoplay
-    src="http://192.168.1.110/streaming/camera.ts"
-  ></mpegts-video>
+  <mpegts-video slot="media" muted autoplay src="http://192.168.1.110/streaming/camera.ts"></mpegts-video>
 
-  <media-loading-indicator
-    slot="centered-chrome"
-    noautohide
-  ></media-loading-indicator>
+  <media-loading-indicator slot="centered-chrome" noautohide></media-loading-indicator>
 
   <media-control-bar>
     <media-play-button></media-play-button>
@@ -64,7 +56,7 @@ npm install mpegts-video-element
 Import in your app javascript (e.g. src/App.js):
 
 ```js
-import "mpegts-video-element";
+import 'mpegts-video-element';
 ```
 
 Optionally, you can load the script directly from a CDN using [esm.run](https://esm.run/):
@@ -78,22 +70,16 @@ This will register the custom elements with the browser so they can be used as H
 
 ## Deferred mode
 
-By default, the element will load and setup the mpegts.js player immediately. This behaviour can be deferred so you can control when the player is loaded.
+By default, the element will load and setup the mpegts.js player immediately. This behaviour can be deferred so you can control when the player is loaded by adding a `defer` attribute to the element.
 
 This is useful when you want to pass a custom `mpegts.js` configuration to the player.
 
 ```html
-<mpegts-video
-  muted
-  autoplay
-  controls
-  src="http://192.168.1.109/stream.ts"
-  defer
-></mpegts-video>
+<mpegts-video muted autoplay controls src="http://192.168.1.109/stream.ts" defer></mpegts-video>
 
 <script>
-  customElements.whenDefined("mpegts-video").then(() => {
-    const video = document.querySelector("mpegts-video");
+  customElements.whenDefined('mpegts-video').then(() => {
+    const video = document.querySelector('mpegts-video');
 
     // set a custom mpegts config
     video.mpegtsConfig = {
@@ -105,7 +91,7 @@ This is useful when you want to pass a custom `mpegts.js` configuration to the p
     //set a custom mpegts logging config
     video.mpegtsLoggingConfig = {
       forceGlobalTag: true,
-      globalTag: "mpegts-video-element",
+      globalTag: 'mpegts-video-element',
       enableVerbose: true,
     };
 
