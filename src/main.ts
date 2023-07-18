@@ -1,6 +1,5 @@
 import { CustomVideoElement } from "custom-media-element";
-import mpegts from "mpegts.js";
-import type Mpegts from "mpegts.js";
+import Mpegts from "mpegts.js";
 
 class MpegtsVideoElement extends CustomVideoElement {
   constructor() {
@@ -16,7 +15,7 @@ class MpegtsVideoElement extends CustomVideoElement {
     this.load();
   }
 
-  #player: mpegts.Player | null = null;
+  #player: Mpegts.Player | null = null;
   #firstLoad: boolean = true;
 
   mpegtsConfig: Mpegts.Config = {};
@@ -40,9 +39,9 @@ class MpegtsVideoElement extends CustomVideoElement {
 
   load(): void {
     this.#destroy();
-    if (mpegts.getFeatureList().mseLivePlayback) {
+    if (Mpegts.getFeatureList().mseLivePlayback) {
       if (this.#firstLoad) {
-        mpegts.LoggingControl.applyConfig({
+        Mpegts.LoggingControl.applyConfig({
           ...this.#defaultMpegtsLoggingConfig,
           ...this.mpegtsLoggingConfig,
         });
@@ -53,7 +52,7 @@ class MpegtsVideoElement extends CustomVideoElement {
         this.#firstLoad = false;
       }
 
-      this.#player = mpegts.createPlayer(
+      this.#player = Mpegts.createPlayer(
         {
           type: "mse",
           isLive: true,
@@ -69,7 +68,7 @@ class MpegtsVideoElement extends CustomVideoElement {
         this.nativeEl.play();
       }
 
-      this.#player.on(mpegts.Events.ERROR, (event) => {
+      this.#player.on(Mpegts.Events.ERROR, (event) => {
         console.error(event);
         this.load();
       });
