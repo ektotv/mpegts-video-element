@@ -32,7 +32,6 @@ jobs:
       fail-fast: true
       matrix:
         typescript-scenario:
-          - typescript@4.9
           - typescript@5.1.6 # project version
           - typescript@latest
           - typescript@next
