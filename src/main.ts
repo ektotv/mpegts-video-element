@@ -16,7 +16,6 @@ class MpegtsVideoElement extends CustomVideoElement {
   }
 
   #player: Mpegts.Player | null = null;
-  #firstLoad: boolean = true;
 
   mpegtsConfig: Mpegts.Config = {};
   #defaultMpegtsConfig: Mpegts.Config = {
@@ -40,17 +39,10 @@ class MpegtsVideoElement extends CustomVideoElement {
   load(): void {
     this.#destroy();
     if (Mpegts.getFeatureList().mseLivePlayback) {
-      if (this.#firstLoad) {
-        Mpegts.LoggingControl.applyConfig({
-          ...this.#defaultMpegtsLoggingConfig,
-          ...this.mpegtsLoggingConfig,
-        });
-
-        if (this.hasAttribute('muted')) {
-          this.nativeEl.muted = true;
-        }
-        this.#firstLoad = false;
-      }
+      Mpegts.LoggingControl.applyConfig({
+        ...this.#defaultMpegtsLoggingConfig,
+        ...this.mpegtsLoggingConfig,
+      });
 
       this.#player = Mpegts.createPlayer(
         {
