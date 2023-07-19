@@ -30,16 +30,21 @@
   ],
   "scripts": {
     "dev": "vite",
+    "lint": "tsc",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "release": "pnpm build && pnpm publish --access public",
+    "release": "changeset publish",
+    "changeset": "changeset",
+    "prerelease": "pnpm build",
     "prettier": "prettier --write ."
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^0.4.8",
+    "@changesets/cli": "^2.26.2",
     "prettier": "^3.0.0",
     "typescript": "5.1.6",
     "vite": "4.4.4",
-    "vite-plugin-dts": "3.2.0",
+    "vite-plugin-dts": "3.3.1",
     "vitest": "0.33.0"
   },
   "dependencies": {
