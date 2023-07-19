@@ -77,9 +77,6 @@ class MpegtsVideoElement extends CustomVideoElement {
 
   #destroy() {
     if (this.#player) {
-      this.#player.pause();
-      this.#player.unload();
-      this.#player.detachMediaElement();
       this.#player.destroy();
       this.#player = null;
     }
