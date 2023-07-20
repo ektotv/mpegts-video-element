@@ -1,5 +1,11 @@
 # mpegts-video-element
 
+## 0.2.3
+
+### Patch Changes
+
+- [`c8517f6`](https://github.com/ektotv/mpegts-video-element/commit/c8517f60144c38f192367343249914bb4613467d) Thanks [@evoactivity](https://github.com/evoactivity)! - Support preload attribute
+
 ## 0.2.2
 
 ### Patch Changes
