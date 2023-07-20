@@ -6,16 +6,21 @@ class MpegtsVideoElement extends CustomVideoElement {
     super();
   }
 
-  get src() {
-    return super.src;
+  attributeChangedCallback(attrName: string, oldValue: string | null, newValue: string | null) {
+    if (attrName !== 'src') {
+      super.attributeChangedCallback(attrName, oldValue, newValue);
+    }
+
+    if (attrName === 'src' && oldValue != newValue) {
+      if (this.#initialized) this.load();
+
+      if (this.hasAttribute('defer')) return;
+      this.load();
+    }
   }
 
-  set src(src) {
-    super.src = src;
-    this.load();
-  }
-
-  #player: Mpegts.Player | null = null;
+  api: Mpegts.Player | null = null;
+  #initialized = false;
 
   mpegtsConfig: Mpegts.Config = {};
   #defaultMpegtsConfig: Mpegts.Config = {
@@ -36,15 +41,20 @@ class MpegtsVideoElement extends CustomVideoElement {
     enableError: false,
   };
 
-  load(): void {
+  async load(): Promise<void> {
     this.#destroy();
+
+    if (!this.src) {
+      return;
+    }
+
     if (Mpegts.getFeatureList().mseLivePlayback) {
       Mpegts.LoggingControl.applyConfig({
         ...this.#defaultMpegtsLoggingConfig,
         ...this.mpegtsLoggingConfig,
       });
 
-      this.#player = Mpegts.createPlayer(
+      this.api = Mpegts.createPlayer(
         {
           type: 'mse',
           isLive: true,
@@ -53,30 +63,84 @@ class MpegtsVideoElement extends CustomVideoElement {
         { ...this.#defaultMpegtsConfig, ...this.mpegtsConfig },
       );
 
-      this.#player.attachMediaElement(this.nativeEl);
-      this.#player.load();
+      this.api.attachMediaElement(this.nativeEl);
 
-      if (this.hasAttribute('autoplay')) {
-        this.nativeEl.play();
+      switch (this.preload) {
+        case 'none': {
+          // when preload is none, load the source on first play
+          const loadSourceOnPlay = () => this.api?.load();
+          this.nativeEl.addEventListener('play', loadSourceOnPlay, {
+            once: true,
+          });
+
+          break;
+        }
+        case 'metadata': {
+          // mpegts.js does not support loading metadata only
+          // so we load the source immediately and then unload it
+          // when the first frame is decoded
+
+          if (this.hasAttribute('autoplay')) {
+            this.nativeEl.autoplay = false;
+          }
+
+          const beginLoadingAndPlay = () => {
+            // create a whole new player instance
+            this.#destroy();
+            this.api = Mpegts.createPlayer(
+              {
+                type: 'mse',
+                isLive: true,
+                url: this.src,
+              },
+              { ...this.#defaultMpegtsConfig, ...this.mpegtsConfig },
+            );
+
+            this.api.attachMediaElement(this.nativeEl);
+            this.api?.load();
+
+            this.nativeEl.play();
+          };
+
+          this.nativeEl.addEventListener('play', beginLoadingAndPlay, {
+            once: true,
+          });
+
+          this.api.load();
+
+          const unloadOnFirstFrame = (e: any) => {
+            if (e.decodedFrames < 1) return;
+            this.api?.unload();
+            this.api?.off(Mpegts.Events.STATISTICS_INFO, unloadOnFirstFrame);
+          };
+
+          this.api.on(Mpegts.Events.STATISTICS_INFO, unloadOnFirstFrame);
+
+          break;
+        }
+        default: {
+          // load source immediately for any other preload value
+          this.api.load();
+
+          if (this.hasAttribute('autoplay')) {
+            this.nativeEl.play();
+          }
+        }
       }
 
-      this.#player.on(Mpegts.Events.ERROR, (event) => {
+      this.api.on(Mpegts.Events.ERROR, (event) => {
         console.error(event);
         this.load();
       });
     }
+
+    this.#initialized = true;
   }
 
   #destroy() {
-    if (this.#player) {
-      this.#player.destroy();
-      this.#player = null;
-    }
-  }
-
-  connectedCallback(): void {
-    if (!this.hasAttribute('defer')) {
-      this.load();
+    if (this.api) {
+      this.api.destroy();
+      this.api = null;
     }
   }
 

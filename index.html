@@ -1,103 +1,100 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MPEG2-TS Video Element</title>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/media-chrome@1/+esm"></script>
-    <script type="module" src="/src/main.ts"></script>
-    <style>
-      html,
-      body {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        width: 100%;
-      }
 
-      media-live-button {
-        display: none;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MPEG2-TS Video Element</title>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/media-chrome@1/+esm"></script>
+  <script type="module" src="/src/main.ts"></script>
+  <style>
+    html,
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      width: 100%;
+    }
 
-      media-controller {
-        aspect-ratio: 16/9;
-        width: 80%;
-        margin: 20px;
-        border-radius: 10px;
-        overflow: hidden;
-      }
+    media-live-button {
+      display: none;
+    }
 
-      media-controller[mediastreamtype='live'] media-time-range {
-        display: none;
-      }
+    media-controller {
+      aspect-ratio: 16/9;
+      width: 80%;
+      margin: 20px;
+      border-radius: 10px;
+      overflow: hidden;
+    }
 
-      media-controller[mediastreamtype='live'] media-live-button {
-        display: block;
-      }
+    media-controller[mediastreamtype='live'] media-time-range {
+      display: none;
+    }
 
-      media-controller[mediastreamtype='live'] .spacer {
-        background: var(--media-control-background, var(--media-secondary-color, rgb(20 20 30 / 0.7)));
-        flex-grow: 1;
-      }
+    media-controller[mediastreamtype='live'] media-live-button {
+      display: block;
+    }
 
-      media-controller[userinactive]:not([mediapaused]) {
-        cursor: none;
-      }
+    media-controller[mediastreamtype='live'] .spacer {
+      background: var(--media-control-background, var(--media-secondary-color, rgb(20 20 30 / 0.7)));
+      flex-grow: 1;
+    }
 
-      media-controller [slot='media'][controls] ~ media-control-bar {
-        display: none;
-      }
-    </style>
-  </head>
+    media-controller[userinactive]:not([mediapaused]) {
+      cursor: none;
+    }
 
-  <body>
-    <media-controller noautoseektolive defaultstreamtype="live" liveedgeoffset="30">
-      <mpegts-video
-        slot="media"
-        muted
-        autoplay
-        src="http://81.94.196.204/tsstreamer/France24_HD.ts"
-        defer
-      ></mpegts-video>
+    media-controller [slot='media'][controls]~media-control-bar {
+      display: none;
+    }
+  </style>
+</head>
 
-      <media-loading-indicator slot="centered-chrome" noautohide></media-loading-indicator>
+<body>
+  <media-controller noautoseektolive defaultstreamtype="live" liveedgeoffset="30">
+    <mpegts-video slot="media" muted autoplay src="http://81.94.196.204/tsstreamer/France24_HD.ts" preload="metadata"
+      defer></mpegts-video>
 
-      <media-control-bar>
-        <media-play-button></media-play-button>
-        <media-mute-button></media-mute-button>
-        <media-volume-range></media-volume-range>
-        <media-time-range></media-time-range>
-        <span class="spacer"></span>
-        <media-pip-button></media-pip-button>
-        <media-captions-button></media-captions-button>
-        <media-live-button disabled></media-live-button>
-        <media-fullscreen-button></media-fullscreen-button>
-      </media-control-bar>
-    </media-controller>
+    <media-loading-indicator slot="centered-chrome" noautohide></media-loading-indicator>
 
-    <script>
-      customElements.whenDefined('mpegts-video').then(() => {
-        const video = document.querySelector('mpegts-video');
+    <media-control-bar>
+      <media-play-button></media-play-button>
+      <media-mute-button></media-mute-button>
+      <media-volume-range></media-volume-range>
+      <media-time-range></media-time-range>
+      <span class="spacer"></span>
+      <media-pip-button></media-pip-button>
+      <media-captions-button></media-captions-button>
+      <media-live-button disabled></media-live-button>
+      <media-fullscreen-button></media-fullscreen-button>
+    </media-control-bar>
+  </media-controller>
 
-        // set a custom mpegts config
-        video.mpegtsConfig = {
-          lazyLoadMaxDuration: 3 * 60,
-          enableWorker: true,
-          reuseRedirectedURL: true,
-        };
+  <script>
+    customElements.whenDefined('mpegts-video').then(() => {
+      const video = document.querySelector('mpegts-video');
 
-        //set a custom mpegts logging config
-        video.mpegtsLoggingConfig = {
-          forceGlobalTag: true,
-          globalTag: 'mpegts-video-element',
-          enableVerbose: true,
-        };
+      // set a custom mpegts config
+      video.mpegtsConfig = {
+        lazyLoadMaxDuration: 3 * 60,
+        enableWorker: true,
+        reuseRedirectedURL: true,
+      };
 
-        // then load the player
-        video.load();
-      });
-    </script>
-  </body>
+      //set a custom mpegts logging config
+      video.mpegtsLoggingConfig = {
+        forceGlobalTag: true,
+        globalTag: 'mpegts-video-element',
+        enableVerbose: true,
+      };
+
+      // then load the player
+      video.load();
+    });
+  </script>
+</body>
+
 </html>
