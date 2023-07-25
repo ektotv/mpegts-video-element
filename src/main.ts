@@ -2,9 +2,28 @@ import { CustomVideoElement } from 'custom-media-element';
 import Mpegts from 'mpegts.js';
 
 class MpegtsVideoElement extends CustomVideoElement {
-  constructor() {
-    super();
-  }
+  api: Mpegts.Player | null = null;
+  #initialized = false;
+  #errorCount = 0;
+
+  mpegtsConfig: Mpegts.Config = {};
+  #defaultMpegtsConfig: Mpegts.Config = {
+    lazyLoadMaxDuration: 3 * 60,
+    enableWorker: true,
+    reuseRedirectedURL: true,
+  };
+
+  mpegtsLoggingConfig: Partial<Mpegts.LoggingControlConfig> = {};
+  #defaultMpegtsLoggingConfig: Mpegts.LoggingControlConfig = {
+    forceGlobalTag: false,
+    globalTag: 'mpegts-video-element][mpegts.js',
+    enableAll: false,
+    enableDebug: false,
+    enableVerbose: true,
+    enableInfo: false,
+    enableWarn: false,
+    enableError: false,
+  };
 
   attributeChangedCallback(attrName: string, oldValue: string | null, newValue: string | null) {
     if (attrName !== 'src') {
@@ -18,28 +37,6 @@ class MpegtsVideoElement extends CustomVideoElement {
       this.load();
     }
   }
-
-  api: Mpegts.Player | null = null;
-  #initialized = false;
-
-  mpegtsConfig: Mpegts.Config = {};
-  #defaultMpegtsConfig: Mpegts.Config = {
-    lazyLoadMaxDuration: 3 * 60,
-    enableWorker: true,
-    reuseRedirectedURL: true,
-  };
-
-  mpegtsLoggingConfig: Partial<Mpegts.LoggingControlConfig> = {};
-  #defaultMpegtsLoggingConfig: Mpegts.LoggingControlConfig = {
-    forceGlobalTag: false,
-    globalTag: 'mpegts-video-element',
-    enableAll: false,
-    enableDebug: false,
-    enableVerbose: false,
-    enableInfo: false,
-    enableWarn: false,
-    enableError: false,
-  };
 
   async load(): Promise<void> {
     this.#destroy();
@@ -129,8 +126,16 @@ class MpegtsVideoElement extends CustomVideoElement {
       }
 
       this.api.on(Mpegts.Events.ERROR, (event) => {
-        console.error(event);
-        this.load();
+        console.error('[mpegts-video-element]', event);
+
+        if (this.#errorCount < 10) {
+          this.#errorCount += 1;
+          const delay = this.#errorCount * 1000;
+          setTimeout(() => {
+            console.warn('[mpegts-video-element] Trying to recover from error.');
+            this.load();
+          }, delay);
+        }
       });
     }
 
